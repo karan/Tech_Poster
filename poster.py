@@ -8,7 +8,7 @@ import praw
 from praw import errors
 
 
-USERNAME = 'Tech_poster'
+USERNAME = ''
 PASSWORD = ''
 
 def get_feed():
@@ -31,7 +31,7 @@ if __name__ == '__main__':
     print 'Found %d articles...' % len(titles)
 
     # post to reddit
-    r = praw.Reddit(user_agent='Tech_Poster')
+    r = praw.Reddit(user_agent='Tech news submitter by /u/Tech_Poster')
     try:
         print 'Logging in to reddit...'
         r.login(USERNAME, PASSWORD)
@@ -44,11 +44,17 @@ if __name__ == '__main__':
             try:
                 print 'Submitting %s' % links[i]
                 r.submit('technology', titles[i], url=links[i])
-                print '\tSubmission successful'
-                sleep(660) # wait for 11 minutes before submitting again
+                print '\tSubmission successful. Sleeping for 10 minutes'
+                sleep(600) # wait for 10 minutes before submitting again
+            except errors.ExceptionList as e_list:
+                for e in e_list:
+                    print e + ': ' + e.message
+                pass
             except errors.AlreadySubmitted as e:
                 print e
-            except errors.InvalidCaptcha as e:
-                print e
+                pass
             except errors.RateLimitExceeded as e:
                 print e
+                print 'Sleeping for 10 minutes'
+                sleep(600) # wait for 11 minutes before submitting again
+                pass
