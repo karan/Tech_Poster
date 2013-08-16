@@ -5,6 +5,7 @@ import re
 from time import sleep
 
 import praw
+from praw import errors
 
 
 USERNAME = 'Tech_poster'
@@ -35,12 +36,19 @@ if __name__ == '__main__':
         print 'Logging in to reddit...'
         r.login(USERNAME, PASSWORD)
         print '\tLogin successful...'
-    except InvalidUserPass:
+    except errors.InvalidUserPass:
         print 'Wrong login details for reddit.'
     else:
         # post the latest articles on reddit
         for i in range(min(len(titles), len(links))):
-            print 'Submitting %s' % links[i]
-            r.submit('technology', titles[i], url=links[i])
-            print '\tSubmission successful'
-            sleep(660) # wait for 11 minutes before submitting again
+            try:
+                print 'Submitting %s' % links[i]
+                r.submit('technology', titles[i], url=links[i])
+                print '\tSubmission successful'
+                sleep(660) # wait for 11 minutes before submitting again
+            except errors.AlreadySubmitted as e:
+                print e
+            except errors.InvalidCaptcha as e:
+                print e
+            except errors.RateLimitExceeded as e:
+                print e
