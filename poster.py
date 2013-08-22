@@ -31,7 +31,7 @@ if __name__ == '__main__':
     print 'Found %d articles...' % len(titles)
 
     # post to reddit
-    r = praw.Reddit(user_agent='Tech news submitter by /u/Tech_Poster')
+    r = praw.Reddit(user_agent='Tech news submitter by /u/Tech_Poster github @thekarangoel')
     try:
         print 'Logging in to reddit...'
         r.login(USERNAME, PASSWORD)
@@ -55,6 +55,11 @@ if __name__ == '__main__':
                 pass
             except errors.RateLimitExceeded as e:
                 print e
-                print 'Sleeping for 10 minutes'
-                sleep(600) # wait for 11 minutes before submitting again
+                print 'Sleeping for %d seconds' % e.sleep_time
+                sleep(e.sleep_time) # wait before submitting again
+                pass
+            except errors.APIException as e:
+                print e
+                print 'Sleeping for 60 minutes'
+                sleep(3600) # wait before submitting again
                 pass
