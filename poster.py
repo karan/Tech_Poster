@@ -8,9 +8,6 @@ import praw
 from praw import errors
 
 
-USERNAME = ''
-PASSWORD = ''
-
 def get_feed():
     url = 'http://www.huffingtonpost.com/feeds/verticals/technology/news.xml'
     content = urlopen(url).read()
@@ -34,7 +31,7 @@ if __name__ == '__main__':
     r = praw.Reddit(user_agent='Tech news submitter by /u/Tech_Poster github @thekarangoel')
     try:
         print 'Logging in to reddit...'
-        r.login(USERNAME, PASSWORD)
+        r.login()
         print '\tLogin successful...'
     except errors.InvalidUserPass:
         print 'Wrong login details for reddit.'
